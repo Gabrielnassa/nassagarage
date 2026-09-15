@@ -673,10 +673,15 @@
             pc.rotation.set(u.rot.x * (1 - p), u.rot.y * (1 - p), u.rot.z * (1 - p));
           });
         }
-        /* dispara quando a seção entra na tela; clique no palco remonta */
+        /* dispara quando a seção está na tela — inclusive se o modelo terminar
+           de carregar com a seção já visível (o observer não dispara de novo,
+           então o loop de render verifica a cada quadro) */
+        let asmInView = false;
+        function startAssembly() { asmT = 0.0001; asmStart = performance.now(); }
         const asmObs = new IntersectionObserver(es => {
           es.forEach(e => {
-            if (e.isIntersecting && asmT === 0) { asmT = 0.0001; asmStart = performance.now(); }
+            asmInView = e.isIntersecting;
+            if (e.isIntersecting && asmT === 0) startAssembly();
           });
         }, { threshold: .35 });
         asmObs.observe(section);
@@ -704,6 +709,7 @@
 
         function frame() {
           requestAnimationFrame(frame);
+          if (asmT === 0 && asmInView) startAssembly();
           if (!wfVisible && asmT >= 1) return;
 
           if (!reduced) idle += 0.0042;
