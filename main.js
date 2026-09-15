@@ -2,62 +2,77 @@
 
 'use strict';
 
-  /* ---------- Preloader ---------- */
+  /* ---------- Preloader (ligado ao carregamento real) ---------- */
   (function () {
     const fill = document.getElementById('l-fill');
     const pct = document.getElementById('l-pct');
     const loader = document.getElementById('loader');
-    let p = 0;
-    const iv = setInterval(() => {
-      p += Math.random() * 14 + 4;
-      if (p >= 100) { p = 100; clearInterval(iv); }
-      fill.style.width = p + '%';
-      pct.textContent = Math.floor(p) + '%';
-      if (p === 100) {
-        setTimeout(() => {
-          loader.classList.add('done');
-          document.body.classList.add('loaded');
-        }, 350);
-      }
-    }, 130);
+    if (!fill || !pct || !loader) { document.body.classList.add('loaded'); return; }
+
+    const MIN_MS = 1100;           // tempo mínimo em tela, para a entrada não piscar
+    const t0 = performance.now();
+    let target = 0, shown = 0, finished = false;
+    const ready = { fonts: false, load: false, logo: false };
+
+    function paint() {
+      shown += (target - shown) * 0.18;
+      const v = Math.round(shown);
+      fill.style.width = v + '%';
+      pct.textContent = String(v).padStart(2, '0');
+      if (!finished || v < 100) requestAnimationFrame(paint);
+    }
+    function bump() {
+      const done = Object.values(ready).filter(Boolean).length;
+      const elapsed = Math.min((performance.now() - t0) / MIN_MS, 1);
+      target = Math.max(target, Math.round(Math.min(92, 20 * done + 32 * elapsed)));
+      if (ready.fonts && ready.load && ready.logo && elapsed >= 1) finish();
+    }
+    function finish() {
+      if (finished) return;
+      finished = true;
+      target = 100;
+      setTimeout(() => {
+        loader.classList.add('done');
+        document.body.classList.add('loaded');
+      }, 420);
+    }
+    requestAnimationFrame(paint);
+
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
+      .then(() => { ready.fonts = true; bump(); });
+    const logo = document.querySelector('.hero-badge img');
+    if (!logo || logo.complete) { ready.logo = true; }
+    else { logo.addEventListener('load', () => { ready.logo = true; bump(); }); logo.addEventListener('error', () => { ready.logo = true; bump(); }); }
+    if (document.readyState === 'complete') { ready.load = true; }
+    else window.addEventListener('load', () => { ready.load = true; bump(); });
+
+    const tick = setInterval(() => { bump(); if (finished) clearInterval(tick); }, 120);
+    setTimeout(() => { ready.fonts = ready.load = ready.logo = true; finish(); }, 5000); // rede lenta: segue mesmo assim
   })();
 
-  /* ---------- Barra de progresso de leitura ---------- */
-  const progress = document.getElementById('progress');
-  function updateProgress() {
-    const h = document.documentElement;
-    const max = h.scrollHeight - h.clientHeight;
-    progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
-  }
-
-  /* ---------- Nav: esconder ao descer, mostrar ao subir ---------- */
-  const nav = document.querySelector('nav');
+  /* ---------- Nav: fundo sólido após o hero, esconde ao descer ---------- */
+  const nav = document.getElementById('nav');
   let lastY = 0;
   function updateNav() {
     const y = window.scrollY;
-    nav.classList.toggle('hide', y > 140 && y > lastY && !document.body.classList.contains('menu-open'));
+    nav.classList.toggle('solid', y > 24);
+    nav.classList.toggle('hide', y > 160 && y > lastY + 4 && !document.body.classList.contains('menu-open'));
     lastY = y;
   }
-
-  /* ---------- Botão voltar ao topo ---------- */
-  const topBtn = document.getElementById('topBtn');
-  topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  function updateTopBtn() { topBtn.classList.toggle('show', window.scrollY > 700); }
-
-  window.addEventListener('scroll', () => { updateProgress(); updateNav(); updateTopBtn(); }, { passive: true });
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
 
   /* ---------- Menu mobile ---------- */
   const hamb = document.getElementById('hamb');
-  hamb.addEventListener('click', () => {
-    const open = document.body.classList.toggle('menu-open');
-    hamb.setAttribute('aria-expanded', open);
-  });
-  document.querySelectorAll('.nav-links a').forEach(a =>
-    a.addEventListener('click', () => {
-      document.body.classList.remove('menu-open');
-      hamb.setAttribute('aria-expanded', 'false');
-    })
-  );
+  function setMenu(open) {
+    document.body.classList.toggle('menu-open', open);
+    hamb.setAttribute('aria-expanded', String(open));
+    hamb.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  }
+  hamb.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  window.matchMedia('(min-width: 901px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
 
   /* ---------- Link ativo conforme a seção visível ---------- */
   const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
@@ -74,8 +89,28 @@
   /* ---------- Reveal on scroll ---------- */
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
-  }, { threshold: .15 });
+  }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- Contadores ---------- */
+  const easeOutCubic = p => 1 - Math.pow(1 - p, 3);
+  function runCounter(el) {
+    const to = parseFloat(el.dataset.to);
+    const suffix = el.dataset.suffix || '';
+    const locale = el.dataset.locale === '1';
+    const dur = 1600, start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const v = Math.round(to * easeOutCubic(p));
+      el.textContent = (locale ? v.toLocaleString('pt-BR') : String(v)) + (p === 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const cio = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { runCounter(e.target); cio.unobserve(e.target); } });
+  }, { threshold: .6 });
+  document.querySelectorAll('.cnt').forEach(el => cio.observe(el));
 
   /* ---------- Relógios de Performance ---------- */
   const SWEEP = 329.9; // 270° do círculo r=70 (circunferência 439.8)
@@ -99,11 +134,10 @@
 
     function tick(now) {
       const p = Math.min((now - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const current = value * eased;
+      const current = value * easeOutCubic(p);
       val.textContent = useLocale
         ? Math.round(current).toLocaleString('pt-BR')
-        : current.toFixed(decimals);
+        : current.toFixed(decimals).replace('.', ',');
       /* redline: como num carro, o arco acende vermelho quando o
          ponteiro entra no fim do curso */
       card.classList.toggle('redline', (current / max) >= 0.85);
@@ -118,6 +152,130 @@
   }, { threshold: .4 });
   document.querySelectorAll('.gauge-card').forEach(el => gio.observe(el));
 
+  /* ---------- Curva de dinamômetro (SVG responsivo) ---------- */
+  (function () {
+    const svg = document.getElementById('dyno-svg');
+    const box = document.getElementById('dyno');
+    if (!svg || !box) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const RPM0 = 1000, RPM1 = 7000, PMAX = 450, TMAX = 600;
+    /* torque de referência (Nm) por rotação — platô típico de N54 Stage 2 */
+    const TQ = [[1000,240],[1500,370],[2000,520],[2500,560],[3000,560],[3500,560],[4000,558],[4500,552],[5000,540],[5500,530],[6000,500],[6500,460],[7000,410]];
+    const tq = r => {
+      for (let i = 0; i < TQ.length - 1; i++) {
+        const [r0, t0] = TQ[i], [r1, t1] = TQ[i + 1];
+        if (r >= r0 && r <= r1) {
+          const p = (r - r0) / (r1 - r0);
+          const s = p * p * (3 - 2 * p); // suavização
+          return t0 + (t1 - t0) * s;
+        }
+      }
+      return TQ[TQ.length - 1][1];
+    };
+    const cv = r => tq(r) * r / 7127; // cv = Nm × rpm / 7127
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const rdRpm = document.getElementById('dr-rpm'), rdP = document.getElementById('dr-p'), rdT = document.getElementById('dr-t');
+
+    let drawn = false, geom = null;
+
+    function render() {
+      const W = Math.max(svg.clientWidth, 320), H = Math.max(svg.clientHeight, 200);
+      const narrow = W < 560;
+      const PL = narrow ? 34 : 44, PR = narrow ? 34 : 44, PT = 18, PB = 30;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      const x = r => PL + (r - RPM0) / (RPM1 - RPM0) * (W - PL - PR);
+      const yp = v => PT + (1 - v / PMAX) * (H - PT - PB);
+      const yt = v => PT + (1 - v / TMAX) * (H - PT - PB);
+      const el = (tag, attrs, parent) => {
+        const n = document.createElementNS(NS, tag);
+        for (const k in attrs) n.setAttribute(k, attrs[k]);
+        (parent || svg).appendChild(n);
+        return n;
+      };
+
+      const defs = el('defs', {});
+      const grad = el('linearGradient', { id: 'dyno-fill', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+      el('stop', { offset: '0%', 'stop-color': '#4A86D8', 'stop-opacity': .28 }, grad);
+      el('stop', { offset: '100%', 'stop-color': '#4A86D8', 'stop-opacity': 0 }, grad);
+
+      /* grade + eixos */
+      for (let r = RPM0; r <= RPM1; r += 1000) {
+        el('line', { class: 'grid', x1: x(r), x2: x(r), y1: PT, y2: H - PB });
+        const t = el('text', { class: 'axis', x: x(r), y: H - 8, 'text-anchor': r === RPM0 ? 'start' : r === RPM1 ? 'end' : 'middle' });
+        t.textContent = (r / 1000).toFixed(0) + 'k';
+      }
+      for (let v = 0; v <= PMAX; v += 150) {
+        el('line', { class: 'grid', x1: PL, x2: W - PR, y1: yp(v), y2: yp(v) });
+        const t = el('text', { class: 'axis', x: PL - 6, y: yp(v) + 3, 'text-anchor': 'end' });
+        t.textContent = v;
+        const t2 = el('text', { class: 'axis', x: W - PR + 6, y: yt(v * TMAX / PMAX) + 3, 'text-anchor': 'start' });
+        t2.textContent = Math.round(v * TMAX / PMAX);
+      }
+
+      /* caminhos */
+      let dP = '', dT = '';
+      for (let r = RPM0; r <= RPM1; r += 50) {
+        const c = r === RPM0 ? 'M' : 'L';
+        dP += `${c}${x(r).toFixed(1)},${yp(cv(r)).toFixed(1)} `;
+        dT += `${c}${x(r).toFixed(1)},${yt(tq(r)).toFixed(1)} `;
+      }
+      const area = el('path', { class: 'area-p', d: dP + `L${x(RPM1)},${H - PB} L${x(RPM0)},${H - PB} Z`, opacity: drawn ? 1 : 0 });
+      const pathT = el('path', { class: 'curve curve-t', d: dT });
+      const pathP = el('path', { class: 'curve curve-p', d: dP });
+
+      /* cursor de leitura */
+      const cross = el('line', { class: 'cross', x1: 0, x2: 0, y1: PT, y2: H - PB });
+      const dotP = el('circle', { class: 'dot dot-p', r: 4 });
+      const dotT = el('circle', { class: 'dot dot-t', r: 4 });
+
+      if (!drawn) {
+        [pathP, pathT].forEach(p => {
+          const len = p.getTotalLength();
+          p.style.strokeDasharray = len;
+          p.style.strokeDashoffset = len;
+        });
+      }
+      geom = { W, PL, PR, x, yp, yt, cross, dotP, dotT, pathP, pathT, area };
+    }
+
+    function draw() {
+      if (drawn || !geom) return;
+      drawn = true;
+      [geom.pathT, geom.pathP].forEach((p, i) => {
+        p.style.transition = reduced ? 'none' : `stroke-dashoffset 2.2s cubic-bezier(.22,.7,.3,1) ${i * .25}s`;
+        requestAnimationFrame(() => { p.style.strokeDashoffset = 0; });
+      });
+      geom.area.style.transition = reduced ? 'none' : 'opacity 1.2s ease 1.4s';
+      requestAnimationFrame(() => { geom.area.setAttribute('opacity', 1); });
+    }
+
+    function readAt(clientX) {
+      if (!geom) return;
+      const rect = svg.getBoundingClientRect();
+      const px = clientX - rect.left;
+      const r = Math.round(Math.min(Math.max((px - geom.PL) / (geom.W - geom.PL - geom.PR), 0), 1) * (RPM1 - RPM0) / 50) * 50 + RPM0;
+      const xx = geom.x(r);
+      geom.cross.setAttribute('x1', xx); geom.cross.setAttribute('x2', xx);
+      geom.dotP.setAttribute('cx', xx); geom.dotP.setAttribute('cy', geom.yp(cv(r)));
+      geom.dotT.setAttribute('cx', xx); geom.dotT.setAttribute('cy', geom.yt(tq(r)));
+      rdRpm.textContent = r.toLocaleString('pt-BR') + ' rpm';
+      rdP.textContent = Math.round(cv(r)) + ' cv';
+      rdT.textContent = Math.round(tq(r)) + ' Nm';
+    }
+
+    render();
+    let rt;
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 120); }, { passive: true });
+    const drawObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { draw(); drawObs.disconnect(); } });
+    }, { threshold: .35 });
+    drawObs.observe(box);
+    svg.addEventListener('pointermove', e => { box.classList.add('hover'); readAt(e.clientX); }, { passive: true });
+    svg.addEventListener('pointerleave', () => box.classList.remove('hover'));
+  })();
+
   /* ---------- Nassa FlowCalc ---------- */
   let fcMode = 'inj';
   const FC_BSFC = {
@@ -125,6 +283,7 @@
     alcool:   { asp: 0.75, turbo: 0.90 },
     metanol:  { asp: 1.10, turbo: 1.30 }
   };
+  const fmt = (v, d) => v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
   function fcSwitch(m) {
     fcMode = m;
     const inj = m === 'inj';
@@ -153,13 +312,13 @@
       const cv = parseFloat(document.getElementById('fc-potencia').value);
       if (!cv || cv <= 0) return;
       const lbhr = (cv * bsfc) / (bicos * duty);
-      document.getElementById('fc-out-lbhr').textContent = lbhr.toFixed(1);
-      document.getElementById('fc-out-ccmin').textContent = (lbhr * 10.5).toFixed(0);
+      document.getElementById('fc-out-lbhr').textContent = fmt(lbhr, 1);
+      document.getElementById('fc-out-ccmin').textContent = fmt(lbhr * 10.5, 0);
     } else {
       const vazao = parseFloat(document.getElementById('fc-vazao').value);
       if (!vazao || vazao <= 0) return;
       const cv = (vazao * bicos * duty) / bsfc;
-      document.getElementById('fc-out-cv').textContent = cv.toFixed(0);
+      document.getElementById('fc-out-cv').textContent = fmt(cv, 0);
     }
   }
   fcCalc();
@@ -558,7 +717,7 @@
           }
 
           const deg = Math.round((car.rotation.y * 180 / Math.PI) % 360);
-          degEl.textContent = (deg < 0 ? deg + 360 : deg) + '°';
+          degEl.textContent = String(deg < 0 ? deg + 360 : deg).padStart(3, '0') + '°';
 
           renderer.render(scene, camera);
         }
@@ -762,25 +921,3 @@
     }
   })();
 
-  /* ---------- Cursor personalizado ---------- */
-  (function () {
-    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
-    const dot = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    if (!dot || !ring) return;
-    let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
-    addEventListener('mousemove', e => {
-      x = e.clientX; y = e.clientY;
-      dot.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)';
-    }, { passive: true });
-    (function follow() {
-      rx += (x - rx) * 0.16;
-      ry += (y - ry) * 0.16;
-      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
-      requestAnimationFrame(follow);
-    })();
-    document.querySelectorAll('a, button, .fc-seg label, input, .fc-tab').forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
-    });
-  })();
