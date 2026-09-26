@@ -341,7 +341,7 @@
         script.onerror = () => { section.style.display = 'none'; };
         document.head.appendChild(script);
       });
-    }, { rootMargin: '900px' });
+    }, { rootMargin: '1800px' });
     lazyBoot.observe(section);
 
     function init() {
@@ -526,6 +526,22 @@
 
         scene.add(car);
 
+        /* O carro procedural (linhas simples) é só reserva: fica escondido
+           enquanto o modelo real baixa e só aparece se o download falhar */
+        car.visible = false;
+        const loadEl = document.getElementById('wf-load');
+        const hintEl = section.querySelector('.wf-hint');
+        function setLoad(txt) { if (loadEl) loadEl.textContent = txt; }
+        function loadDone() {
+          if (loadEl) loadEl.classList.add('off');
+          if (hintEl) hintEl.classList.add('on');
+        }
+        function showProcedural() {
+          car.visible = true;
+          if (loadEl) loadEl.classList.add('off');
+        }
+        setLoad('Carregando modelo 3D');
+
         /* ---- Modelo 3D real: se houver um arquivo e90.glb na pasta do site,
                ele substitui o carro procedural (mesma técnica do carro denso
                em wireframe de sites de referência) ---- */
@@ -539,6 +555,7 @@
         loaderScript.onload = () => {
           try {
             new THREE.GLTFLoader().load(E90_SRC, (gltf) => {
+              try {
               const model = new THREE.Group();
               window.__carPieces = [];
               gltf.scene.updateMatrixWorld(true);
@@ -585,6 +602,8 @@
               while (car.children.length) car.remove(car.children[0]);
               car.add(model);
               window.__setAssembly && window.__setAssembly(0);
+              car.visible = true;
+              loadDone();
 
               /* contorno único do carro completo — elimina as emendas entre
                  as peças; construído num respiro para não travar a animação */
@@ -609,10 +628,13 @@
                   if (typeof asmT !== 'undefined' && asmT >= 1) outlineMat.opacity = 0.8;
                 } catch (err) { /* sem contorno, segue só a malha */ }
               }, 150);
-            }, undefined, () => { /* sem modelo embutido: segue o carro procedural */ });
-          } catch (err) { /* GLTFLoader indisponível: segue o procedural */ }
+              } catch (err) { showProcedural(); }
+            }, (ev) => {
+              if (ev && ev.total) setLoad('Carregando modelo 3D · ' + Math.min(99, Math.round(ev.loaded / ev.total * 100)) + '%');
+            }, () => { showProcedural(); /* sem modelo embutido: segue o carro procedural */ });
+          } catch (err) { showProcedural(); /* GLTFLoader indisponível: segue o procedural */ }
         };
-        loaderScript.onerror = () => { /* CDN indisponível: segue o procedural */ };
+        loaderScript.onerror = () => { showProcedural(); /* CDN indisponível: segue o procedural */ };
         document.head.appendChild(loaderScript);
 
         /* Piso em grade, bem tênue */

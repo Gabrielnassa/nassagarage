@@ -369,7 +369,21 @@ section { padding: var(--sec) 0; position: relative; }
 .wf-stat.on { opacity: 1; transform: none; }
 .wf-stat b { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 3.6vw, 44px); color: var(--text); line-height: 1; display: block; text-transform: uppercase; }
 .wf-stat i { font-style: normal; color: var(--muted); display: block; margin-top: 6px; font-size: 10px; }
-.wf-hint { position: absolute; left: var(--gutter); bottom: clamp(28px, 5vh, 48px); z-index: 3; color: var(--faint); font-size: 10px; }
+.wf-hint { position: absolute; left: var(--gutter); bottom: clamp(28px, 5vh, 48px); z-index: 3; color: var(--faint); font-size: 10px; opacity: 0; transition: opacity .6s var(--ease); }
+.wf-hint.on { opacity: 1; }
+.wf-load {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
+  color: var(--muted); font-size: 10px; white-space: nowrap; font-variant-numeric: tabular-nums;
+  padding-left: 22px; transition: opacity .5s var(--ease);
+}
+.wf-load::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 10px; height: 10px; margin-top: -5px;
+  border: 1px solid var(--blue-2); border-right-color: transparent; border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.wf-load:empty { display: none; }
+.wf-load.off { opacity: 0; pointer-events: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .wf-ghost {
   position: absolute; right: var(--gutter); bottom: clamp(24px, 5vh, 48px); z-index: 2; text-align: right;
   font-family: var(--font-poster); font-weight: 900; text-transform: uppercase;
