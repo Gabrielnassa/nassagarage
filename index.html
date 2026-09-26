@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NASSA GARAGE — Builds, Engenharia & Código</title>
+<meta name="description" content="Nassa Garage: builds documentadas com dados, ferramentas de cálculo abertas e um BMW 335i N54 Stage 2. Feito em São Paulo. O braço automotivo da Nassa Tech.">
+<meta name="theme-color" content="#070809">
+
+<!-- Open Graph / compartilhamento -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="NASSA GARAGE — Builds, Engenharia & Código">
+<meta property="og:description" content="Builds documentadas com dados, ferramentas de cálculo abertas e um BMW 335i N54 Stage 2. Feito em São Paulo.">
+<meta property="og:url" content="https://nassagarage.com.br">
+<meta property="og:image" content="https://nassagarage.com.br/logo.png">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/png" href="favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Saira+Extra+Condensed:wght@800;900&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="loader" aria-hidden="true">
+  <div class="l-mark">NASSA<span>GARAGE</span></div>
+  <div class="l-bar"><i id="l-fill"></i></div>
+  <div class="l-meta"><span>Carregando</span><span id="l-pct">00</span></div>
+</div>
+
+<a class="skip" href="#about">Pular para o conteúdo</a>
+
+<nav id="nav" aria-label="Navegação principal">
+  <div class="nav-inner">
+    <a class="logo" href="#top" aria-label="Nassa Garage — início">NASSA<span>GARAGE</span></a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#about"><span class="n">01</span>Sobre</a>
+      <a href="#machine"><span class="n">02</span>The Machine</a>
+      <a href="#blueprint"><span class="n">03</span>Blueprint</a>
+      <a href="#performance"><span class="n">05</span>Performance</a>
+      <a href="#ferramentas"><span class="n">06</span>FlowCalc</a>
+      <a href="#frota"><span class="n">07</span>A Frota</a>
+      <div class="nav-mobile-foot" aria-hidden="true">
+        <span>São Paulo — BR</span>
+        <a href="https://www.instagram.com/nassagarage" target="_blank" rel="noopener">Instagram ↗</a>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button id="hamb" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="wrap hero-grid">
+    <div class="hero-meta stage" style="--d:.05s">
+      <span class="mono">23°33'S · 46°38'W<br>São Paulo — BR</span>
+      <span class="mono ta-r">Est. 2026<br>by Nassa Tech</span>
+    </div>
+
+    <div class="hero-center">
+      <div class="hero-badge stage" style="--d:.15s">
+        <img src="logo.png" alt="Emblema Nassa Garage — BMW E90" width="438" height="520">
+      </div>
+
+      <h1 class="hero-title" aria-label="Nassa Garage">
+        <span class="line"><span class="stage-line" style="--d:.25s">Nassa</span></span>
+        <span class="line"><span class="stage-line blue" style="--d:.35s">Garage</span></span>
+      </h1>
+
+      <p class="hero-lead stage" style="--d:.55s">
+        Builds documentadas com dados. Engenharia de verdade.<br class="br-d">
+        Ferramentas abertas para quem prepara carro no Brasil.
+      </p>
+
+      <div class="hero-cta stage" style="--d:.65s">
+        <a class="btn" href="#machine">Ver o build<i>↓</i></a>
+        <a class="btn ghost" href="#ferramentas">Abrir FlowCalc<i>→</i></a>
+      </div>
+    </div>
+
+    <div class="hero-foot stage" style="--d:.8s">
+      <ul class="hero-chips mono">
+        <li><b>BMW 335i</b><span>N54 · Stage 2</span></li>
+        <li><b>Fusca 86</b><span>Boxer 1.6 · Ar</span></li>
+        <li><b>FlowCalc</b><span>Ferramenta aberta</span></li>
+      </ul>
+      <div class="scroll-cue mono"><span>Scroll</span><i></i></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track mono">
+    <span>Nassa Garage</span><span>São Paulo</span><span>Feito no Brasil</span><span>N54 Biturbo</span><span>Datalog</span><span>FlowCalc</span><span>Stage 2</span><span>Builds documentadas</span>
+    <span>Nassa Garage</span><span>São Paulo</span><span>Feito no Brasil</span><span>N54 Biturbo</span><span>Datalog</span><span>FlowCalc</span><span>Stage 2</span><span>Builds documentadas</span>
+  </div>
+</div>
+
+<!-- 01 — SOBRE -->
+<section id="about" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>01</b>A marca</span>
+      <h2 class="sec-title reveal" id="about-title">Mais que uma garagem.<br><span class="dim">Um laboratório de dados<br>sobre quatro rodas.</span></h2>
+    </div>
+
+    <div class="blocks">
+      <article class="block reveal" style="--i:0">
+        <span class="num mono">01</span>
+        <h3>A Garagem</h3>
+        <p><b>Nassa Garage</b> é o braço automotivo da Nassa Tech. Builds documentadas de verdade: o que foi feito, por que foi feito e o que os datalogs mostraram. Sem achismo.</p>
+      </article>
+      <article class="block reveal" style="--i:1">
+        <span class="num mono">02</span>
+        <h3>O Código</h3>
+        <p>Nascemos da programação. Cada decisão do carro passa por <b>dados</b> — pressão de rampa, lambda, boost — e cada ferramenta que criamos é aberta para a comunidade.</p>
+      </article>
+      <article class="block reveal" style="--i:2">
+        <span class="num mono">03</span>
+        <h3>A Comunidade</h3>
+        <p>Feito em São Paulo, para quem vive a cultura BMW e a preparação nacional. Acompanhe os projetos no Instagram <a href="https://www.instagram.com/nassagarage" target="_blank" rel="noopener">@nassagarage</a>.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — THE MACHINE -->
+<section id="machine" class="machine" aria-labelledby="machine-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>02</b>The Machine</span>
+      <h2 class="sec-title reveal" id="machine-title">Built loud.<br><span class="blue">Tuned by data.</span></h2>
+    </div>
+
+    <div class="machine-grid">
+      <div class="machine-hero reveal">
+        <span class="mono label">2010 · BMW E90 LCI</span>
+        <div class="machine-name" aria-label="335i">335<span>i</span></div>
+        <p class="machine-copy">
+          Seis cilindros em linha, dois turbos e uma ECU que não esconde nada.
+          O 335i é o carro-laboratório da garagem: cada mudança entra com um datalog antes e outro depois.
+        </p>
+        <a class="link-arrow mono" href="#blueprint">Ver o blueprint 3D<i>→</i></a>
+      </div>
+
+      <dl class="spec reveal" style="--i:1" aria-label="Ficha técnica do BMW 335i">
+        <div class="spec-row"><dt class="mono">Motor</dt><dd>N54B30 · 3.0 R6 biturbo</dd></div>
+        <div class="spec-row"><dt class="mono">Potência</dt><dd><span class="cnt" data-to="420" data-suffix="+">0</span> cv <small>estimados</small></dd></div>
+        <div class="spec-row"><dt class="mono">Torque</dt><dd><span class="cnt" data-to="560">0</span> Nm</dd></div>
+        <div class="spec-row"><dt class="mono">Pressão</dt><dd>1,2 bar <small>de turbo</small></dd></div>
+        <div class="spec-row"><dt class="mono">Tração</dt><dd>Traseira · RWD</dd></div>
+        <div class="spec-row"><dt class="mono">Estágio</dt><dd>Stage 2 · Podium</dd></div>
+        <div class="spec-row"><dt class="mono">Rodas</dt><dd>Style 359M · M Performance</dd></div>
+        <div class="spec-row"><dt class="mono">Corte</dt><dd><span class="cnt" data-to="7000" data-locale="1">0</span> rpm</dd></div>
+      </dl>
+    </div>
+
+    <div class="machine-stats">
+      <div class="mstat reveal" style="--i:0"><b class="blue"><span class="cnt" data-to="420">0</span>+</b><i class="mono">Cavalos</i></div>
+      <div class="mstat reveal" style="--i:1"><b>N54</b><i class="mono">Biturbo 3.0 R6</i></div>
+      <div class="mstat reveal" style="--i:2"><b>RWD</b><i class="mono">Tração traseira</i></div>
+      <div class="mstat reveal" style="--i:3"><b class="blue">ST2</b><i class="mono">Stage 2 · Podium</i></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — BLUEPRINT 3D -->
+<section id="blueprint" class="wf-section" aria-label="BMW 335i em wireframe 3D">
+  <div class="wf-stage" id="wireframe">
+    <canvas id="wf-canvas"></canvas>
+
+    <span class="kicker mono wf-kicker"><b>03</b>Blueprint</span>
+    <span class="mono wf-deg" id="wf-deg" aria-hidden="true">000°</span>
+
+    <div class="wf-stats">
+      <div class="wf-stat" data-at="0.05"><b>335i</b><i class="mono">2010 BMW E90</i></div>
+      <div class="wf-stat" data-at="0.28"><b>420+</b><i class="mono">Cavalos</i></div>
+      <div class="wf-stat" data-at="0.5"><b>N54</b><i class="mono">Biturbo R6</i></div>
+      <div class="wf-stat" data-at="0.72"><b>RWD</b><i class="mono">Tração traseira</i></div>
+    </div>
+
+    <span class="mono wf-load" id="wf-load" aria-live="polite"></span>
+    <span class="mono wf-hint" aria-hidden="true">Clique para remontar o carro</span>
+    <div class="wf-ghost" aria-hidden="true">BMW<br>335i</div>
+  </div>
+</section>
+
+<!-- 04 — COMPONENTS -->
+<section id="components" aria-labelledby="comp-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>04</b>The Components</span>
+      <h2 class="sec-title reveal" id="comp-title">Construído<br>por <span class="blue">partes.</span></h2>
+    </div>
+
+    <div class="comps">
+      <article class="comp reveal" style="--i:0">
+        <div class="comp-top mono"><span>01</span><span>M Performance</span></div>
+        <canvas class="comp-3d" data-part="wheel" aria-hidden="true"></canvas>
+        <div class="comp-info">
+          <h3>Style 359M</h3>
+          <span class="mono">Roda · 19"</span>
+        </div>
+      </article>
+      <article class="comp reveal" style="--i:1">
+        <div class="comp-top mono"><span>02</span><span>Powertrain</span></div>
+        <canvas class="comp-3d" data-part="engine" aria-hidden="true"></canvas>
+        <div class="comp-info">
+          <h3>N54B30</h3>
+          <span class="mono">Motor · 3.0 R6 biturbo</span>
+        </div>
+      </article>
+      <article class="comp reveal" style="--i:2">
+        <div class="comp-top mono"><span>03</span><span>Forced induction</span></div>
+        <canvas class="comp-3d" data-part="turbo" aria-hidden="true"></canvas>
+        <div class="comp-info">
+          <h3>Twin Turbo</h3>
+          <span class="mono">Turbos · 1,2 bar</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 05 — PERFORMANCE -->
+<section id="performance" class="perf" aria-labelledby="perf-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>05</b>Performance</span>
+      <h2 class="sec-title reveal" id="perf-title">Números<br><span class="blue">reais.</span></h2>
+      <p class="lead reveal">Cada número validado em datalog. Os valores acompanham a evolução do build.</p>
+    </div>
+
+    <div class="gauges">
+      <div class="gauge-card reveal" style="--i:0" data-value="7000" data-max="7000" data-decimals="0" data-locale="1">
+        <div class="gauge-wrap">
+          <svg class="dial" viewBox="0 0 170 170" aria-hidden="true">
+            <circle class="track" cx="85" cy="85" r="70" stroke-dasharray="329.9 439.8"/>
+            <circle class="fill"  cx="85" cy="85" r="70" stroke-dasharray="0 439.8"/>
+          </svg>
+          <div class="needle"></div>
+          <div class="gauge-center"><div class="val">0</div><div class="unit mono">rpm</div></div>
+        </div>
+        <div class="label mono">Rotação máxima</div>
+        <div class="scale mono"><span>0</span><span>7.000</span></div>
+      </div>
+
+      <div class="gauge-card reveal" style="--i:1" data-value="420" data-max="450" data-decimals="0">
+        <div class="gauge-wrap">
+          <svg class="dial" viewBox="0 0 170 170" aria-hidden="true">
+            <circle class="track" cx="85" cy="85" r="70" stroke-dasharray="329.9 439.8"/>
+            <circle class="fill"  cx="85" cy="85" r="70" stroke-dasharray="0 439.8"/>
+          </svg>
+          <div class="needle"></div>
+          <div class="gauge-center"><div class="val">0</div><div class="unit mono">cv</div></div>
+        </div>
+        <div class="label mono">Potência estimada</div>
+        <div class="scale mono"><span>0</span><span>450</span></div>
+      </div>
+
+      <div class="gauge-card reveal" style="--i:2" data-value="560" data-max="620" data-decimals="0">
+        <div class="gauge-wrap">
+          <svg class="dial" viewBox="0 0 170 170" aria-hidden="true">
+            <circle class="track" cx="85" cy="85" r="70" stroke-dasharray="329.9 439.8"/>
+            <circle class="fill"  cx="85" cy="85" r="70" stroke-dasharray="0 439.8"/>
+          </svg>
+          <div class="needle"></div>
+          <div class="gauge-center"><div class="val">0</div><div class="unit mono">Nm</div></div>
+        </div>
+        <div class="label mono">Torque</div>
+        <div class="scale mono"><span>0</span><span>620</span></div>
+      </div>
+
+      <div class="gauge-card reveal" style="--i:3" data-value="1.2" data-max="1.2" data-decimals="1">
+        <div class="gauge-wrap">
+          <svg class="dial" viewBox="0 0 170 170" aria-hidden="true">
+            <circle class="track" cx="85" cy="85" r="70" stroke-dasharray="329.9 439.8"/>
+            <circle class="fill"  cx="85" cy="85" r="70" stroke-dasharray="0 439.8"/>
+          </svg>
+          <div class="needle"></div>
+          <div class="gauge-center"><div class="val">0</div><div class="unit mono">bar</div></div>
+        </div>
+        <div class="label mono">Pressão de turbo</div>
+        <div class="scale mono"><span>0</span><span>1,2</span></div>
+      </div>
+    </div>
+
+    <!-- Curva de dinamômetro -->
+    <div class="dyno reveal" id="dyno">
+      <div class="dyno-head">
+        <div>
+          <span class="mono label">Curva de referência · Stage 2</span>
+          <h3>Potência e torque por rotação</h3>
+        </div>
+        <div class="dyno-legend mono">
+          <span><i class="sw sw-p"></i>Potência (cv)</span>
+          <span><i class="sw sw-t"></i>Torque (Nm)</span>
+        </div>
+      </div>
+      <div class="dyno-chart">
+        <svg id="dyno-svg" viewBox="0 0 960 360" role="img" aria-label="Gráfico de potência e torque do BMW 335i entre 1.000 e 7.000 rpm"></svg>
+        <div class="dyno-readout mono" id="dyno-readout" aria-hidden="true">
+          <b id="dr-rpm">—</b><span id="dr-p">—</span><span id="dr-t">—</span>
+        </div>
+      </div>
+      <div class="dyno-foot mono">
+        <span>Pico · <b>421 cv</b> @ 6.000 rpm</span>
+        <span>Platô · <b>560 Nm</b> 2.500 – 3.500 rpm</span>
+        <span class="dim">Curva estimada para dimensionamento — o datalog do banco substitui esta referência.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 — FLOWCALC -->
+<section id="ferramentas" class="tool" aria-labelledby="fc-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>06</b>Ferramentas</span>
+      <h2 class="sec-title reveal" id="fc-title">Nassa<br><span class="blue">FlowCalc.</span></h2>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-copy reveal">
+        <p class="lead">Calcule a vazão de injetor necessária para o seu projeto — ou a potência teórica que os seus bicos suportam. O resultado atualiza na hora.</p>
+
+        <div class="formula mono" aria-label="Fórmula usada pelo FlowCalc">
+          <span class="f-l">lb/h por bico</span>
+          <span class="f-eq">=</span>
+          <span class="f-frac"><span>cv × BSFC</span><span>n × duty</span></span>
+        </div>
+
+        <ul class="tool-notes">
+          <li><b>BSFC</b> típicos: gasolina 0,50 / 0,60 (asp / turbo) · álcool 0,75 / 0,90 · metanol 1,10 / 1,30 lb/cv·h.</li>
+          <li>1 lb/h ≈ 10,5 cc/min. Estimativas para dimensionamento inicial.</li>
+          <li>Valide o acerto com equipamento adequado antes de rodar.</li>
+        </ul>
+
+        <a class="link-arrow mono" href="flowcalc.html">Abrir em tela cheia<i>↗</i></a>
+      </div>
+
+      <div class="fc reveal" style="--i:1">
+        <div class="fc-tabs" role="tablist" aria-label="Modo de cálculo">
+          <button class="fc-tab active" id="fc-tab-inj" role="tab" aria-selected="true" onclick="fcSwitch('inj')">Injetores</button>
+          <button class="fc-tab" id="fc-tab-pot" role="tab" aria-selected="false" onclick="fcSwitch('pot')">Potência teórica</button>
+        </div>
+        <div class="fc-card">
+
+          <div class="fc-field" id="fc-f-potencia">
+            <label class="t mono" for="fc-potencia">Potência do motor (cv)</label>
+            <input type="number" id="fc-potencia" value="420" min="1" inputmode="numeric" oninput="fcCalc()">
+          </div>
+
+          <div class="fc-field hidden" id="fc-f-vazao">
+            <label class="t mono" for="fc-vazao">Vazão dos bicos (lb/h)</label>
+            <input type="number" id="fc-vazao" value="80" min="1" inputmode="numeric" oninput="fcCalc()">
+          </div>
+
+          <div class="fc-field">
+            <label class="t mono" for="fc-bicos">Número de bicos</label>
+            <input type="number" id="fc-bicos" value="6" min="1" max="16" inputmode="numeric" oninput="fcCalc()">
+          </div>
+
+          <div class="fc-field">
+            <span class="t mono">Motor</span>
+            <div class="fc-seg">
+              <input type="radio" name="fc-motor" id="fc-m-asp" value="asp" onchange="fcCalc()">
+              <label for="fc-m-asp">Aspirado</label>
+              <input type="radio" name="fc-motor" id="fc-m-turbo" value="turbo" checked onchange="fcCalc()">
+              <label for="fc-m-turbo">Turbo</label>
+            </div>
+          </div>
+
+          <div class="fc-field">
+            <span class="t mono">Combustível</span>
+            <div class="fc-seg">
+              <input type="radio" name="fc-comb" id="fc-c-gas" value="gasolina" checked onchange="fcCalc()">
+              <label for="fc-c-gas">Gasolina</label>
+              <input type="radio" name="fc-comb" id="fc-c-alc" value="alcool" onchange="fcCalc()">
+              <label for="fc-c-alc">Álcool</label>
+              <input type="radio" name="fc-comb" id="fc-c-met" value="metanol" onchange="fcCalc()">
+              <label for="fc-c-met">Metanol</label>
+            </div>
+          </div>
+
+          <div class="fc-field">
+            <span class="t mono">Capacidade utilizada</span>
+            <div class="fc-seg">
+              <input type="radio" name="fc-duty" id="fc-d-80" value="0.80" checked onchange="fcCalc()">
+              <label for="fc-d-80">80%</label>
+              <input type="radio" name="fc-duty" id="fc-d-90" value="0.90" onchange="fcCalc()">
+              <label for="fc-d-90">90%</label>
+              <input type="radio" name="fc-duty" id="fc-d-100" value="1.00" onchange="fcCalc()">
+              <label for="fc-d-100">100%</label>
+            </div>
+          </div>
+
+          <div class="fc-result" id="fc-r-inj" aria-live="polite">
+            <h4 class="mono">Vazão necessária por bico</h4>
+            <div class="fc-rgrid">
+              <div class="fc-rbox"><b id="fc-out-lbhr">–</b><i class="mono">lb/h</i></div>
+              <div class="fc-rbox"><b id="fc-out-ccmin">–</b><i class="mono">cc/min</i></div>
+            </div>
+          </div>
+
+          <div class="fc-result hidden" id="fc-r-pot" aria-live="polite">
+            <h4 class="mono">Potência teórica suportada</h4>
+            <div class="fc-rgrid">
+              <div class="fc-rbox"><b id="fc-out-cv">–</b><i class="mono">cv</i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 — A FROTA -->
+<section id="frota" class="fleet-sec" aria-labelledby="fleet-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker mono"><b>07</b>A Frota</span>
+      <h2 class="sec-title reveal" id="fleet-title">O que mora<br>na <span class="blue">garagem.</span></h2>
+    </div>
+
+    <div class="fleet">
+      <article class="car reveal" style="--i:0">
+        <div class="car-cover c-blue">
+          <span class="car-idx mono">01</span>
+          <span class="car-badge mono">Build ativa</span>
+          <span class="car-ghost">335</span>
+        </div>
+        <div class="car-body">
+          <h3>BMW 335<span class="blue">i</span></h3>
+          <p class="car-spec mono">2010 · E90 · Stage 2 · Podium</p>
+          <div class="car-stats">
+            <div><b>420+</b><i class="mono">cv</i></div>
+            <div><b>N54</b><i class="mono">biturbo</i></div>
+            <div><b>560</b><i class="mono">Nm</i></div>
+            <div><b>RWD</b><i class="mono">tração</i></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="car reveal" style="--i:1">
+        <div class="car-cover c-wine">
+          <span class="car-idx mono">02</span>
+          <span class="car-badge mono">Clássico</span>
+          <span class="car-ghost">86</span>
+        </div>
+        <div class="car-body">
+          <h3>Fusca</h3>
+          <p class="car-spec mono">1986 · Vinho · Refrigerado a ar</p>
+          <div class="car-stats">
+            <div><b>54</b><i class="mono">cv</i></div>
+            <div><b>1.6</b><i class="mono">boxer</i></div>
+            <div><b>113</b><i class="mono">Nm</i></div>
+            <div><b>RR</b><i class="mono">tração</i></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="car car-soon reveal" style="--i:2">
+        <div class="car-cover c-soon">
+          <span class="car-idx mono">03</span>
+          <span class="car-badge mono">Em breve</span>
+          <span class="car-ghost">?</span>
+        </div>
+        <div class="car-body">
+          <h3>Próximo projeto</h3>
+          <p class="car-spec mono">A vaga está reservada.</p>
+          <div class="car-stats">
+            <div><b>—</b><i class="mono">cv</i></div>
+            <div><b>—</b><i class="mono">motor</i></div>
+            <div><b>—</b><i class="mono">Nm</i></div>
+            <div><b>—</b><i class="mono">tração</i></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap">
+    <span class="kicker mono"><b>08</b>Acompanhe</span>
+    <h2 class="cta-title reveal" id="cta-title">O build não para.<br><span class="dim">Acompanhe de perto.</span></h2>
+    <div class="cta-row reveal" style="--i:1">
+      <a class="btn" href="https://www.instagram.com/nassagarage" target="_blank" rel="noopener">Instagram<i>↗</i></a>
+      <a class="btn ghost" href="mailto:contato@nassatech.com.br">contato@nassatech.com.br<i>→</i></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">NASSA<span>GARAGE</span></div>
+        <p>Builds documentadas com dados, ferramentas de cálculo abertas e a cultura automotiva levada a sério. O braço automotivo da Nassa Tech.</p>
+      </div>
+      <div class="foot-col">
+        <h4 class="mono">Navegação</h4>
+        <a href="#about">Sobre</a>
+        <a href="#machine">The Machine</a>
+        <a href="#blueprint">Blueprint</a>
+        <a href="#performance">Performance</a>
+        <a href="#ferramentas">FlowCalc</a>
+        <a href="#frota">A Frota</a>
+      </div>
+      <div class="foot-col">
+        <h4 class="mono">Conecte-se</h4>
+        <a href="https://www.instagram.com/nassagarage" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://nassatech.com.br" target="_blank" rel="noopener">Nassa Tech</a>
+        <a href="mailto:contato@nassatech.com.br">contato@nassatech.com.br</a>
+      </div>
+      <div class="foot-col">
+        <h4 class="mono">Garagem</h4>
+        <span class="foot-line">São Paulo — BR</span>
+        <span class="foot-line">23°33'S · 46°38'W</span>
+        <span class="foot-line">Est. 2026</span>
+      </div>
+    </div>
+    <div class="foot-bottom mono">
+      <span>© 2026 Nassa Garage · Feito em São Paulo</span>
+      <span>Desenvolvido por <a href="https://nassatech.com.br">Nassa Tech</a></span>
+      <a class="foot-top" href="#top">Topo <i>↑</i></a>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+
+</body>
+</html>

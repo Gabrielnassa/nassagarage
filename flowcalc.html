@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nassa FlowCalc — Cálculo de Injetores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070809;
+    --panel: #0f1115;
+    --panel-2: #0c0e11;
+    --line: rgba(255,255,255,.12);
+    --red: #2A61AD;   /* Estoril Blue II (B45) */
+    --red-dark: #1B4076;
+    --text: #e8e9eb;
+    --muted: #8b8f98;
+    --ok: #4A86D8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(42,97,173,.16), transparent),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px) 0 0 / 12.5% 100%;
+    color: var(--text);
+    font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 16px 80px;
+  }
+  header { text-align: center; margin-bottom: 36px; }
+  .back {
+    position: fixed; top: 18px; left: 20px; z-index: 5;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color .2s;
+  }
+  .back:hover { color: #fff; }
+  .back b { color: var(--red); font-weight: 500; }
+  header .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red-dark);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  header h1 {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(34px, 6vw, 56px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  header h1 span { color: var(--red); }
+  header p { color: var(--muted); margin-top: 10px; max-width: 520px; font-size: 14px; }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    width: min(680px, 100%);
+  }
+  .tab {
+    flex: 1;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--panel-2);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    padding: 14px 8px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tab:first-child { border-radius: 6px 0 0 0; }
+  .tab:last-child { border-radius: 0 6px 0 0; border-left: none; }
+  .tab.active {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+
+  .card {
+    width: min(680px, 100%);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 0 0 8px 8px;
+    padding: 28px 26px 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  }
+  .field { margin-bottom: 22px; }
+  .field label.title {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  input[type=number] {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 20px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  input[type=number]:focus { border-color: var(--red); }
+
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg input { display: none; }
+  .seg label {
+    flex: 1;
+    min-width: 90px;
+    text-align: center;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 11px 6px;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .15s;
+    user-select: none;
+  }
+  .seg label:hover { border-color: #4a4f5a; color: var(--text); }
+  .seg input:checked + label {
+    background: linear-gradient(180deg, var(--red), var(--red-dark));
+    border-color: var(--red);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .result {
+    margin-top: 6px;
+    border-top: 2px solid var(--red);
+    background: var(--panel-2);
+    border-radius: 4px;
+    padding: 20px 22px;
+  }
+  .result h3 {
+    font-family: 'Saira Condensed', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .result-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .result-box {
+    flex: 1;
+    min-width: 140px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .result-box .val {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    color: var(--ok);
+    line-height: 1;
+  }
+  .result-box .unit { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
+  .hint { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">← <b>Nassa</b> Garage</a>
+
+<header>
+  <div class="tag">Nassa FlowCalc</div>
+  <h1>Cálculo de <span>Injetores</span></h1>
+  <p>Descubra a vazão de bico necessária para o seu motor ou a potência teórica que os seus injetores conseguem alimentar.</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" id="tab-inj" onclick="switchTab('inj')">Cálculo de Injetores</button>
+  <button class="tab" id="tab-pot" onclick="switchTab('pot')">Potência Teórica</button>
+</div>
+
+<div class="card">
+
+  <!-- Campo exclusivo do modo INJETORES -->
+  <div class="field" id="f-potencia">
+    <label class="title">Potência do motor (cv)</label>
+    <input type="number" id="potencia" value="300" min="1" oninput="calc()">
+  </div>
+
+  <!-- Campo exclusivo do modo POTÊNCIA -->
+  <div class="field hidden" id="f-vazao">
+    <label class="title">Vazão dos bicos injetores (lb/h)</label>
+    <input type="number" id="vazao" value="80" min="1" oninput="calc()">
+  </div>
+
+  <div class="field">
+    <label class="title">Número de bicos injetores</label>
+    <input type="number" id="bicos" value="4" min="1" max="16" oninput="calc()">
+  </div>
+
+  <div class="field">
+    <label class="title">Tipo de motor</label>
+    <div class="seg">
+      <input type="radio" name="motor" id="m-asp" value="asp" onchange="calc()">
+      <label for="m-asp">Aspirado</label>
+      <input type="radio" name="motor" id="m-turbo" value="turbo" checked onchange="calc()">
+      <label for="m-turbo">Turbo</label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="title">Tipo de combustível</label>
+    <div class="seg">
+      <input type="radio" name="comb" id="c-gas" value="gasolina" onchange="calc()">
+      <label for="c-gas">Gasolina</label>
+      <input type="radio" name="comb" id="c-alc" value="alcool" checked onchange="calc()">
+      <label for="c-alc">Álcool</label>
+      <input type="radio" name="comb" id="c-met" value="metanol" onchange="calc()">
+      <label for="c-met">Metanol</label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="title">Capacidade utilizada dos bicos</label>
+    <div class="seg">
+      <input type="radio" name="duty" id="d-80" value="0.80" checked onchange="calc()">
+      <label for="d-80">80% (recomendado)</label>
+      <input type="radio" name="duty" id="d-90" value="0.90" onchange="calc()">
+      <label for="d-90">90%</label>
+      <input type="radio" name="duty" id="d-100" value="1.00" onchange="calc()">
+      <label for="d-100">100%</label>
+    </div>
+  </div>
+
+  <!-- Resultado modo INJETORES -->
+  <div class="result" id="r-inj">
+    <h3>Resultado — vazão necessária por bico</h3>
+    <div class="result-grid">
+      <div class="result-box"><div class="val" id="out-lbhr">–</div><div class="unit">lb/h</div></div>
+      <div class="result-box"><div class="val" id="out-ccmin">–</div><div class="unit">cc/min</div></div>
+    </div>
+  </div>
+
+  <!-- Resultado modo POTÊNCIA -->
+  <div class="result hidden" id="r-pot">
+    <h3>Resultado — potência teórica suportada</h3>
+    <div class="result-grid">
+      <div class="result-box"><div class="val" id="out-cv">–</div><div class="unit">Potência (cv)</div></div>
+    </div>
+  </div>
+
+  <p class="hint">
+    Os cálculos usam valores típicos de consumo específico (BSFC): gasolina 0,50 (aspirado) / 0,60 (turbo)&nbsp;·
+    álcool 0,75 / 0,90&nbsp;· metanol 1,10 / 1,30 lb/cv·h. Conversão: 1 lb/h ≈ 10,5 cc/min.
+    Valores são estimativas para dimensionamento inicial — sempre valide o acerto com equipamento adequado.
+  </p>
+</div>
+
+<footer style="margin-top:28px; font-size:12px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; text-align:center;">
+  Nassa FlowCalc · uma ferramenta <span style="color:var(--red); font-weight:700;">Nassa Garage</span> — desenvolvida por Nassa Tech
+</footer>
+
+<script>
+  let mode = 'inj';
+
+  const BSFC = {
+    gasolina: { asp: 0.50, turbo: 0.60 },
+    alcool:   { asp: 0.75, turbo: 0.90 },
+    metanol:  { asp: 1.10, turbo: 1.30 }
+  };
+
+  function switchTab(m) {
+    mode = m;
+    document.getElementById('tab-inj').classList.toggle('active', m === 'inj');
+    document.getElementById('tab-pot').classList.toggle('active', m === 'pot');
+    document.getElementById('f-potencia').classList.toggle('hidden', m !== 'inj');
+    document.getElementById('f-vazao').classList.toggle('hidden', m !== 'pot');
+    document.getElementById('r-inj').classList.toggle('hidden', m !== 'inj');
+    document.getElementById('r-pot').classList.toggle('hidden', m !== 'pot');
+    calc();
+  }
+
+  function getVal(name) {
+    return document.querySelector('input[name="' + name + '"]:checked').value;
+  }
+
+  function calc() {
+    const bicos = parseFloat(document.getElementById('bicos').value);
+    const motor = getVal('motor');
+    const comb  = getVal('comb');
+    const duty  = parseFloat(getVal('duty'));
+    const bsfc  = BSFC[comb][motor];
+
+    if (!bicos || bicos < 1) return;
+
+    if (mode === 'inj') {
+      const cv = parseFloat(document.getElementById('potencia').value);
+      if (!cv || cv <= 0) return;
+      const lbhr = (cv * bsfc) / (bicos * duty);
+      document.getElementById('out-lbhr').textContent = lbhr.toFixed(1);
+      document.getElementById('out-ccmin').textContent = (lbhr * 10.5).toFixed(0);
+    } else {
+      const vazao = parseFloat(document.getElementById('vazao').value);
+      if (!vazao || vazao <= 0) return;
+      const cv = (vazao * bicos * duty) / bsfc;
+      document.getElementById('out-cv').textContent = cv.toFixed(0);
+    }
+  }
+
+  calc();
+</script>
+</body>
+</html>
