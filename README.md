@@ -31,6 +31,13 @@ Edite os valores lá e suba só esse arquivo.
 | `logo.png`, `favicon.png`, `apple-touch-icon.png`, `icon-*.png` | Identidade e ícones |
 | `site.webmanifest`, `sitemap.xml`, `robots.txt` | Instalação no celular e SEO |
 
+## Ao publicar uma atualização
+
+Os arquivos de estilo e de script têm um número de versão no endereço, como `style.css?v=20261008`.
+Sempre que mudar `style.css`, `main.js`, `tools.js`, `data.js` ou `three-scene.js`, troque esse número
+em `index.html`, `flowcalc.html`, `404.html` e na linha do `import` em `main.js`. Assim nenhum
+visitante fica com uma mistura de arquivos novos e antigos guardados no navegador.
+
 ## Rodar localmente
 
     python3 -m http.server   →   http://localhost:8000

@@ -371,7 +371,7 @@
       started = true;
       boot.disconnect();
       if (loadEl) loadEl.textContent = 'Carregando modelo 3D';
-      import('./three-scene.js')
+      import('./three-scene.js?v=20261008')
         .then(m => m.boot())
         .catch(() => { if (loadEl) { loadEl.textContent = 'Não foi possível carregar o 3D neste navegador.'; loadEl.classList.add('err'); } });
     }, { rootMargin: '1800px 0px' });
