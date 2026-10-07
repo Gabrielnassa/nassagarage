@@ -1,44 +1,49 @@
 # NASSA GARAGE — Site oficial
 
 Site da Nassa Garage: builds documentadas com dados, ferramentas de cálculo e o BMW 335i E90 em 3D.
-HTML + CSS + JavaScript puro, com Three.js para os modelos 3D.
-Estrutura plana (todos os arquivos na raiz) para facilitar o upload no GitHub.
+HTML, CSS e JavaScript puro. Three.js vem junto em `vendor/`, sem depender de CDN.
 
-## Direção de design
+## Atualizar os números do carro
 
-Pôster de filme de motorsport: preto profundo, azul Estoril como único acento, tipografia
-condensada gigante (Saira Condensed / Saira Extra Condensed), texto em Barlow e dados em
-JetBrains Mono. Grão de filme por cima, movimento contido e revelações em cascata.
+Tudo sai de **`data.js`**: ficha técnica, relógios, blueprint, card da frota e curva do dinamômetro.
+Edite os valores lá e suba só esse arquivo.
 
-## Seções
-
-1. Hero — emblema, título em pôster, chamadas para o build e para o FlowCalc
-2. Sobre — manifesto da marca em três blocos
-3. The Machine — 335i com ficha técnica e stats
-4. Blueprint — o carro em wireframe 3D (montagem por peças; clique para remontar)
-5. Components — roda 359M, motor N54 e twin turbo em 3D
-6. Performance — relógios animados e curva de dinamômetro interativa (SVG)
-7. FlowCalc — calculadora de injetores / potência teórica
-8. A Frota — 335i, Fusca 86 e a próxima vaga
-9. Acompanhe + rodapé
+- **Diário do build** (`log`) e **lista de peças** (`pecas`): começam vazios e aparecem sozinhos
+  na seção O carro assim que tiverem um item. O formato está comentado no topo do arquivo.
+- **Curva do dinamômetro** (`dyno.pontos`): pares de rpm e torque. Ao trocar por uma puxada real,
+  mude `fonte` para `'banco'` e o texto do gráfico muda junto.
 
 ## Arquivos
 
-- index.html — página principal
-- style.css — estilos (tokens no topo do arquivo)
-- main.js — preloader, nav, reveals, contadores, relógios, dyno, FlowCalc e 3D
-- logo.png / favicon.png — identidade
-- e90-parts.glb — o carro em 26 peças (animação de montagem)
-- wheel-359m.glb / engine-n54.glb / turbo.glb — peças da seção Components
-- flowcalc.html — FlowCalc como página avulsa
+| Arquivo | Função |
+| --- | --- |
+| `index.html` | Página principal |
+| `flowcalc.html` | Ferramentas em tela cheia (aceita `#injetores`, `#pneus`, `#conversor`, `#datalog`) |
+| `404.html` | Página de endereço não encontrado |
+| `style.css` | Estilos, com os tokens de cor e fonte no topo |
+| `data.js` | Dados do carro, diário do build e lista de peças |
+| `main.js` | Preloader, nav, menu, reveals, contadores, relógios e dyno |
+| `tools.js` | Injetores, pneus e marchas, conversor e leitor de datalog |
+| `three-scene.js` | Blueprint e peças em 3D, carregado só perto da seção |
+| `models/` | Modelos 3D comprimidos com Draco |
+| `vendor/three/` | Three.js 0.169, GLTFLoader e decodificador Draco |
+| `og.jpg` | Imagem de compartilhamento 1200 × 630 |
+| `logo.png`, `favicon.png`, `apple-touch-icon.png`, `icon-*.png` | Identidade e ícones |
+| `site.webmanifest`, `sitemap.xml`, `robots.txt` | Instalação no celular e SEO |
 
 ## Rodar localmente
 
-python3 -m http.server  →  http://localhost:8000
-(abrir com dois cliques não carrega os modelos 3D)
+    python3 -m http.server   →   http://localhost:8000
+
+Abrir o HTML com dois cliques não carrega o 3D.
 
 ## Publicar no GitHub Pages
 
-Settings → Pages → Deploy from a branch → main / (root) → Save
+Settings → Pages → Deploy from a branch → main / (root) → Save.
+
+Depois de publicar, envie `https://gabrielnassa.github.io/nassagarage/sitemap.xml`
+no Google Search Console. Se registrar um domínio próprio, crie um arquivo `CNAME`
+com o domínio e troque os endereços `gabrielnassa.github.io/nassagarage` nas tags
+de compartilhamento, no `sitemap.xml` e nos caminhos do `404.html`.
 
 — Desenvolvido por Nassa Tech
